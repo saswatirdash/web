@@ -1,0 +1,188 @@
+export interface BuildingData {
+  name: string;
+  floors: number;
+  classrooms: number;
+  labs: number;
+  acUnits: number;
+  lightsFans: number;
+  computers: number;
+  projectors: number;
+  avgDailyKwh: number;
+  efficiency: number; // kWh per floor
+  rankByConsumption: number;
+  rankByEfficiency: number;
+  anomaly?: boolean;
+  solarCandidate?: boolean;
+}
+
+export const CAMPUS_DATA: BuildingData[] = [
+  {
+    name: "Galleria",
+    floors: 5,
+    classrooms: 18,
+    labs: 6,
+    acUnits: 35,
+    lightsFans: 220,
+    computers: 120,
+    projectors: 20,
+    avgDailyKwh: 520,
+    efficiency: 104,
+    rankByConsumption: 4,
+    rankByEfficiency: 7,
+    solarCandidate: true,
+  },
+  {
+    name: "LHC",
+    floors: 4,
+    classrooms: 12,
+    labs: 4,
+    acUnits: 28,
+    lightsFans: 180,
+    computers: 90,
+    projectors: 14,
+    avgDailyKwh: 430,
+    efficiency: 107.5,
+    rankByConsumption: 6,
+    rankByEfficiency: 6,
+  },
+  {
+    name: "Octagon",
+    floors: 4,
+    classrooms: 5,
+    labs: 2,
+    acUnits: 18,
+    lightsFans: 120,
+    computers: 80,
+    projectors: 8,
+    avgDailyKwh: 280,
+    efficiency: 70,
+    rankByConsumption: 8,
+    rankByEfficiency: 10,
+  },
+  {
+    name: "Atrium",
+    floors: 5,
+    classrooms: 25,
+    labs: 1,
+    acUnits: 14,
+    lightsFans: 26,
+    computers: 150,
+    projectors: 25,
+    avgDailyKwh: 410,
+    efficiency: 82,
+    rankByConsumption: 7,
+    rankByEfficiency: 8,
+  },
+  {
+    name: "TIFAC Building",
+    floors: 4,
+    classrooms: 4,
+    labs: 7,
+    acUnits: 22,
+    lightsFans: 140,
+    computers: 130,
+    projectors: 6,
+    avgDailyKwh: 390,
+    efficiency: 97.5,
+    rankByConsumption: 7,
+    rankByEfficiency: 8,
+  },
+  {
+    name: "Research Block",
+    floors: 5,
+    classrooms: 6,
+    labs: 10,
+    acUnits: 30,
+    lightsFans: 160,
+    computers: 200,
+    projectors: 8,
+    avgDailyKwh: 450,
+    efficiency: 90,
+    rankByConsumption: 5,
+    rankByEfficiency: 9,
+  },
+  {
+    name: "Library Block",
+    floors: 3,
+    classrooms: 3,
+    labs: 1,
+    acUnits: 16,
+    lightsFans: 100,
+    computers: 60,
+    projectors: 4,
+    avgDailyKwh: 210,
+    efficiency: 70,
+    rankByConsumption: 10,
+    rankByEfficiency: 11,
+  },
+  {
+    name: "Boys Hostel",
+    floors: 5,
+    classrooms: 0,
+    labs: 0,
+    acUnits: 45,
+    lightsFans: 320,
+    computers: 180,
+    projectors: 0,
+    avgDailyKwh: 720,
+    efficiency: 144,
+    rankByConsumption: 1,
+    rankByEfficiency: 1,
+    solarCandidate: true,
+  },
+  {
+    name: "Girls Hostel",
+    floors: 5,
+    classrooms: 0,
+    labs: 0,
+    acUnits: 35,
+    lightsFans: 260,
+    computers: 150,
+    projectors: 0,
+    avgDailyKwh: 620,
+    efficiency: 124,
+    rankByConsumption: 2,
+    rankByEfficiency: 2,
+    solarCandidate: true,
+  },
+  {
+    name: "Workshop/Lab",
+    floors: 2,
+    classrooms: 2,
+    labs: 6,
+    acUnits: 10,
+    lightsFans: 110,
+    computers: 50,
+    projectors: 2,
+    avgDailyKwh: 240,
+    efficiency: 120,
+    rankByConsumption: 9,
+    rankByEfficiency: 4,
+  },
+  {
+    name: "Indoor Sports",
+    floors: 1,
+    classrooms: 1,
+    labs: 0,
+    acUnits: 0,
+    lightsFans: 4,
+    computers: 1,
+    projectors: 1,
+    avgDailyKwh: 110,
+    efficiency: 110,
+    rankByConsumption: 11,
+    rankByEfficiency: 5,
+  },
+];
+
+export const CAMPUS_TOTALS = {
+  dailyKwh: 4370,
+  monthlyKwh: 131100,
+  annualKwh: 1595050,
+  dailyCost: 34960,
+  monthlyCost: 1048800,
+  annualCost: 12760000,
+  carbonFootprintFactor: 0.82, // kg CO2/kWh
+};
+
+export const TARIFF = 8; // ₹/kWh

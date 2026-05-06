@@ -1,0 +1,5 @@
+{
+  "name": "GreenPulse",
+  "description": "NIST University Campus Energy Intelligence Platform powered by Google Gemini",
+  "requestFramePermissions": []
+}
