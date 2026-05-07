@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TreePine, Car, Smartphone, Wind, Leaf } from "lucide-react";
+import { TreePine, Smartphone, School, Hotel, Leaf } from "lucide-react";
 import { motion } from "motion/react";
 
 interface SustainabilityImpactProps {
@@ -19,12 +19,12 @@ export function SustainabilityImpact({ annualKwhSaved }: SustainabilityImpactPro
       description: "Equivalent CO₂ absorption of mature trees per year"
     },
     {
-      label: "Cars Removed",
-      value: (co2Saved / 4600).toFixed(1), // 1 car emits ~4600kg/year
-      icon: Car,
+      label: "Classrooms",
+      value: Math.round(annualKwhSaved / 1460), // Avg classroom ~1460kWh/year
+      icon: School,
       color: "text-blue-500",
       bg: "bg-blue-500/10",
-      description: "Average passenger vehicles off the road for one year"
+      description: "Total classrooms that could be powered for a full academic year"
     },
     {
       label: "Phone Charges",
@@ -35,12 +35,12 @@ export function SustainabilityImpact({ annualKwhSaved }: SustainabilityImpactPro
       description: "Number of smartphones that could be powered for a year"
     },
     {
-      label: "Clean Energy",
-      value: `${(annualKwhSaved / 2000).toFixed(1)} homes`, // 1 home uses ~2000kWh clean potential
-      icon: Wind,
+      label: "Hostel Rooms",
+      value: Math.round(annualKwhSaved / 2500), // Avg hostel room ~2500kWh/year
+      icon: Hotel,
       color: "text-sky-500",
       bg: "bg-sky-500/10",
-      description: "Approximate residential energy offset potential"
+      description: "Approximate number of hostel rooms offset by energy savings"
     }
   ];
 

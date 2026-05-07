@@ -6,6 +6,10 @@ import { EnergyCharts } from "@/src/components/EnergyCharts";
 import { GreenPulseAI } from "@/src/components/GreenPulseAI";
 import { SustainabilityImpact } from "@/src/components/SustainabilityImpact";
 import { SolarSavingsSummary } from "@/src/components/SolarSavingsSummary";
+import { Sidebar } from "@/src/components/Sidebar";
+import { DashboardHeader } from "@/src/components/DashboardHeader";
+import { StatsGrid } from "@/src/components/StatsGrid";
+import { OptimizationInsights } from "@/src/components/OptimizationInsights";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
@@ -21,7 +25,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Line, LineChart, ResponsiveContainer } from "recharts";
 import {
   LayoutDashboard,
   Building2,
@@ -73,9 +76,6 @@ function DashboardContent() {
       bg: "bg-emerald-500/10",
       trend: "+2.4%",
       trendUp: false,
-      data: [
-        { value: 4420 }, { value: 4380 }, { value: 4510 }, { value: 4490 }, { value: 4400 }, { value: 4350 }, { value: 4370 }
-      ]
     },
     {
       label: "Daily Cost",
@@ -85,9 +85,6 @@ function DashboardContent() {
       bg: "bg-blue-500/10",
       trend: "-1.8%",
       trendUp: false,
-      data: [
-        { value: 35360 }, { value: 35000 }, { value: 36000 }, { value: 35800 }, { value: 35200 }, { value: 34800 }, { value: 34960 }
-      ]
     },
     {
       label: "Carbon Footprint",
@@ -97,9 +94,6 @@ function DashboardContent() {
       bg: "bg-emerald-600/10",
       trend: "+0.5%",
       trendUp: true,
-      data: [
-        { value: 3624 }, { value: 3591 }, { value: 3698 }, { value: 3681 }, { value: 3608 }, { value: 3567 }, { value: 3583 }
-      ]
     },
   ];
 
@@ -112,100 +106,28 @@ function DashboardContent() {
   });
 
   return (
-    <div className="flex h-screen w-full bg-[#09090b] text-zinc-100 overflow-hidden">
-      {/* Sidebar */}
-      <motion.aside
-        initial={false}
-        animate={{ width: isSidebarOpen ? 260 : 0, opacity: isSidebarOpen ? 1 : 0 }}
-        className="relative flex flex-col border-r border-zinc-800 bg-zinc-950/50"
+    <div className="flex h-screen w-full bg-[#09090b] text-zinc-100 overflow-hidden font-sans">
+      <Sidebar 
+        isOpen={isSidebarOpen} 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        user={user} 
+        logout={logout} 
+      />
+
+      <main 
+        className="flex-1 flex flex-col transition-all duration-300 overflow-hidden"
+        style={{ marginLeft: isSidebarOpen ? 260 : 80 }}
       >
-        <div className="flex h-16 items-center gap-3 px-6 border-b border-zinc-800">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500">
-            <Zap className="h-5 w-5 text-zinc-950" />
-          </div>
-          <span className="text-lg font-bold tracking-tight">GreenPulse</span>
-        </div>
-
-        <nav className="flex-1 space-y-1 p-4">
-          <button 
-            onClick={() => setActiveTab("overview")}
-            className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
-              activeTab === "overview" 
-                ? "bg-emerald-500/10 text-emerald-500" 
-                : "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
-            }`}
-          >
-            <LayoutDashboard className="h-4 w-4" />
-            Dashboard
-          </button>
-          <button 
-            onClick={() => setActiveTab("buildings")}
-            className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
-              activeTab === "buildings" 
-                ? "bg-emerald-500/10 text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.1)]" 
-                : "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
-            }`}
-          >
-            <Building2 className="h-4 w-4" />
-            Buildings
-          </button>
-          <button 
-            onClick={() => setActiveTab("ai")}
-            className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
-              activeTab === "ai" 
-                ? "bg-emerald-500/10 text-emerald-500" 
-                : "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100"
-            }`}
-          >
-            <Sparkles className="h-4 w-4" />
-            AI Assistant
-          </button>
-          <Separator className="my-4 bg-zinc-800" />
-          <button 
-            onClick={logout}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 hover:bg-red-500/10 hover:text-red-500 transition-colors"
-          >
-            <LogOut className="h-4 w-4" />
-            Logout
-          </button>
-        </nav>
-
-        <div className="p-4 border-t border-zinc-800">
-          <div className="rounded-xl bg-zinc-900 p-4">
-            <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider">NIST University</p>
-            <p className="mt-1 text-xs text-zinc-400">Berhampur, Odisha</p>
-            <div className="mt-4 flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[10px] text-zinc-500">System Online</span>
-            </div>
-          </div>
-        </div>
-      </motion.aside>
-
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
-        <header className="flex h-16 items-center justify-between border-b border-zinc-800 bg-zinc-950/50 px-8">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="rounded-lg p-2 hover:bg-zinc-800"
-            >
-              {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
-            <h1 className="text-sm font-medium text-zinc-400">Campus Intelligence Dashboard</h1>
-          </div>
-          <div className="flex items-center gap-4">
-            <Badge variant="outline" className="border-zinc-700 bg-zinc-900 text-zinc-400">
-              {user?.email}
-            </Badge>
-            {user?.photoURL ? (
-              <img src={user.photoURL} alt="User" className="h-8 w-8 rounded-full border border-zinc-700" referrerPolicy="no-referrer" />
-            ) : (
-              <div className="h-8 w-8 rounded-full bg-zinc-800 border border-zinc-700" />
-            )}
-          </div>
-        </header>
+        <DashboardHeader 
+          isSidebarOpen={isSidebarOpen}
+          setIsSidebarOpen={setIsSidebarOpen}
+          activeTab={activeTab}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+        />
 
         <div 
           ref={scrollRef}
@@ -213,50 +135,7 @@ function DashboardContent() {
           className="flex-1 overflow-y-auto"
         >
           <div className="mx-auto max-w-7xl p-8">
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8">
-              {stats.map((stat, i) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className={`rounded-lg ${stat.bg} p-2`}>
-                      <stat.icon className={`h-5 w-5 ${stat.color}`} />
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <span className={`text-[10px] font-bold ${stat.trendUp ? 'text-red-500' : 'text-emerald-500'}`}>
-                        {stat.trend}
-                      </span>
-                      <TrendingDown className={`h-3 w-3 ${stat.trendUp ? 'rotate-180 text-red-500' : 'text-emerald-500'}`} />
-                    </div>
-                  </div>
-                  <div className="flex items-end justify-between gap-4">
-                    <div>
-                      <p className="text-sm text-zinc-500">{stat.label}</p>
-                      <h3 className="text-2xl font-bold mt-1">{stat.value}</h3>
-                    </div>
-                    <div className="h-10 w-24 shrink-0">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={stat.data}>
-                          <Line 
-                            type="monotone" 
-                            dataKey="value" 
-                            stroke={stat.trendUp ? "#ef4444" : "#10b981"} 
-                            strokeWidth={2} 
-                            dot={false}
-                            isAnimationActive={false}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+            <StatsGrid stats={stats} />
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
               <TabsContent value="overview" className="space-y-8">
@@ -266,32 +145,7 @@ function DashboardContent() {
 
                 <SolarSavingsSummary />
                 
-                <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-8">
-                  <div className="flex items-center gap-3 mb-6">
-                    <Sparkles className="h-5 w-5 text-emerald-500" />
-                    <h2 className="text-xl font-bold">Optimization Insights</h2>
-                  </div>
-                  <div className="grid gap-6 md:grid-cols-3">
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-emerald-400">AC Scheduling</h4>
-                      <p className="text-sm text-zinc-400 leading-relaxed">
-                        Implementing strict AC timetables in Galleria and LHC could save up to ₹1,200 daily.
-                      </p>
-                    </div>
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-amber-400">Atrium Audit</h4>
-                      <p className="text-sm text-zinc-400 leading-relaxed">
-                        The Atrium shows 122 kWh/floor efficiency with minimal lighting. Immediate audit recommended for server loads.
-                      </p>
-                    </div>
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-blue-400">Solar Potential</h4>
-                      <p className="text-sm text-zinc-400 leading-relaxed">
-                        Hostels account for 29.3% of campus load. Rooftop solar could offset 40% of this demand.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                <OptimizationInsights />
               </TabsContent>
 
               <TabsContent value="buildings" className="space-y-8">
@@ -510,8 +364,10 @@ function DashboardContent() {
         <Button
           onClick={() => setIsAiOpen(!isAiOpen)}
           size="icon"
-          className={`h-14 w-14 rounded-full shadow-lg transition-all ${
-            isAiOpen ? "bg-zinc-800 hover:bg-zinc-700" : "bg-emerald-600 hover:bg-emerald-500"
+          className={`h-14 w-14 rounded-full shadow-lg transition-all duration-300 hover:scale-110 active:scale-95 ring-2 ring-offset-2 ring-offset-[#09090b] ${
+            isAiOpen 
+              ? "bg-zinc-800 hover:bg-zinc-700 ring-zinc-700" 
+              : "bg-emerald-600 hover:bg-emerald-500 ring-emerald-500/50"
           }`}
         >
           {isAiOpen ? <X className="h-6 w-6" /> : <MessageSquare className="h-6 w-6" />}

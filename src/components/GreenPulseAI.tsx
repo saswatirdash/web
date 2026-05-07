@@ -95,7 +95,8 @@ export function GreenPulseAI() {
     if (!messageText.trim() || isLoading) return;
 
     const userMessage: Message = { role: "user", content: messageText };
-    setMessages((prev) => [...prev, userMessage]);
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
     if (!customPrompt) setInput("");
     setIsLoading(true);
 
@@ -103,28 +104,37 @@ export function GreenPulseAI() {
     setMessages((prev) => [...prev, { role: "assistant", content: "", isStreaming: true }]);
 
     try {
+      // Format history for the API - Mapping 'assistant' to 'model' as required by Gemini
+      const history = messages
+        .filter(m => m.content && !m.isStreaming)
+        .map(m => ({
+          role: m.role === "assistant" ? "model" : "user",
+          parts: [{ text: m.content }]
+        }));
+
       const chat = ai.chats.create({
         model: "gemini-3-flash-preview",
         config: {
           systemInstruction: SYSTEM_PROMPT,
         },
+        history: history,
       });
 
-      const streamResponse = await chat.sendMessageStream({
+      const result = await chat.sendMessageStream({
         message: messageText,
       });
 
       let fullContent = "";
-      for await (const chunk of streamResponse) {
+      for await (const chunk of result) {
         const text = chunk.text || "";
         fullContent += text;
         setMessages((prev) => {
-          const newMessages = [...prev];
-          const lastMessage = newMessages[newMessages.length - 1];
-          if (lastMessage && lastMessage.role === "assistant") {
-            lastMessage.content = fullContent;
+          const updated = [...prev];
+          const last = updated[updated.length - 1];
+          if (last && last.role === "assistant") {
+            last.content = fullContent;
           }
-          return newMessages;
+          return updated;
         });
       }
 
@@ -140,11 +150,17 @@ export function GreenPulseAI() {
 
     } catch (error) {
       console.error("AI Error:", error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      
       setMessages((prev) => {
-        const newMessages = prev.filter(m => m.content !== "" || m.role !== "assistant");
+        // Remove the empty streaming message if it exists
+        const cleanedMessages = prev.filter(m => !m.isStreaming || m.content !== "");
         return [
-          ...newMessages,
-          { role: "assistant", content: "I encountered an error connecting to my intelligence core. Please try again." },
+          ...cleanedMessages,
+          { 
+            role: "assistant", 
+            content: `I encountered an technical issue: ${errorMessage}. Please ensure the environment is correctly configured.` 
+          },
         ];
       });
     } finally {
