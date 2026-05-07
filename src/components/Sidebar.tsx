@@ -23,7 +23,7 @@ export function Sidebar({ isOpen, activeTab, setActiveTab, user, logout }: Sideb
   const menuItems = [
     { id: "overview", label: "Overview", icon: LayoutDashboard },
     { id: "buildings", label: "Buildings", icon: Building2 },
-    { id: "solar", label: "Solar Prediction", icon: Sparkles },
+    { id: "ai", label: "AI Assistant", icon: Sparkles },
   ];
 
   return (

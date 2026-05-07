@@ -82,8 +82,6 @@ export function GreenPulseAI() {
   const [copiedIndex, setCopiedIndex] = React.useState<number | null>(null);
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
-  const ai = React.useMemo(() => new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY }), []);
-
   const copyToClipboard = (text: string, index: number) => {
     navigator.clipboard.writeText(text);
     setCopiedIndex(index);
@@ -93,6 +91,20 @@ export function GreenPulseAI() {
   const handleSend = async (customPrompt?: string) => {
     const messageText = customPrompt || input;
     if (!messageText.trim() || isLoading) return;
+
+    // Check for API key
+    if (!process.env.GEMINI_API_KEY) {
+      setMessages((prev) => [
+        ...prev,
+        { role: "user", content: messageText },
+        { 
+          role: "assistant", 
+          content: "I'm sorry, but look's like the Gemini API key is missing. Please check your environment variables." 
+        }
+      ]);
+      if (!customPrompt) setInput("");
+      return;
+    }
 
     const userMessage: Message = { role: "user", content: messageText };
     const newMessages = [...messages, userMessage];
@@ -104,6 +116,9 @@ export function GreenPulseAI() {
     setMessages((prev) => [...prev, { role: "assistant", content: "", isStreaming: true }]);
 
     try {
+      // Create a fresh instance for every request to avoid stale config
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
       // Format history for the API - Mapping 'assistant' to 'model' as required by Gemini
       const history = messages
         .filter(m => m.content && !m.isStreaming)
@@ -181,7 +196,7 @@ export function GreenPulseAI() {
   }, [messages, isLoading]);
 
   return (
-    <Card className="flex h-[600px] flex-col border-zinc-800 bg-zinc-900">
+    <Card className="flex h-full w-full flex-col border-zinc-800 bg-zinc-900 overflow-hidden">
       <CardHeader className="border-b border-zinc-800 bg-zinc-900 py-4 flex flex-row items-center justify-between">
         <CardTitle className="flex items-center gap-2 text-sm font-medium text-emerald-400">
           <Sparkles className="h-4 w-4" />
